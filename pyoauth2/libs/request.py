@@ -32,10 +32,13 @@ class Request(object):
         files = self.opts.pop('files', {})
         params = urlencode(params_u2utf8(self.opts))
 
-        if self.method in ('POST', 'PUT'):
+        if self.method == 'POST':
             (body, content_type) = self.__encode_files(files, self.opts) if files else (params, self.content_type)
             self.headers.update({'Content-Type': content_type})
             self.body = body
+
+        elif self.method == 'PUT':
+            self.body = files
 
         elif self.opts:
             self.uri += '&%s'%params if '?' in self.uri else '?%s'%params
